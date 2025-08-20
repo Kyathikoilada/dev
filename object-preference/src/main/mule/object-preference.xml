@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="973a5460-c763-46f3-816e-9ea60484f745" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="object-preferenceFlow" doc:id="9ba75146-949f-4fb9-929a-79c44ada4ec6" >
+		<http:listener doc:name="Listener" doc:id="c61c3c1d-0f35-466b-9354-e26f16c4e4b3" config-ref="HTTP_Listener_config" path="/{path}"/>
+		<logger level="INFO" doc:name="Logger" doc:id="98c6256c-9cbd-45bb-ba64-cabd9c23027e" message="#[attributes.uriParams.path]"/>
+		<set-variable value="#[attributes.uriParams.path]" doc:name="Set Variable" doc:id="586738eb-d0c6-4f07-a8da-45818a0d01ac" variableName="flowname"/>
+		<flow-ref doc:name="Flow Reference" doc:id="002a3a14-8cf0-423e-b332-f74fffa47831" name="#[vars.flowname]"/>
+	</flow>
+	<sub-flow name="OS-Store" doc:id="0e9d1a45-e45f-4287-a23a-a41f658eb3c7" >
+		<os:store doc:name="Store" doc:id="f6cd4cde-ae03-4573-9e61-3fdde70336d0" key="#[payload.id]" failIfPresent="true"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a12b5ae4-baa2-4cd1-9c69-1d9b078e6f87" />
+	</sub-flow>
+	<sub-flow name="OS-ReteriveAll" doc:id="54c0baec-398e-4c09-a9a2-8889a619842a" >
+		<os:retrieve-all doc:name="Retrieve all" doc:id="71a78f39-6b36-4aea-953e-f4536fc01913" />
+		<logger level="INFO" doc:name="Logger" doc:id="90fb93be-ed71-468e-8407-25275a79be2c" message="#[payload]"/>
+	</sub-flow>
+	<sub-flow name="OS-Reterive" doc:id="d73d8ab1-69fe-4576-a819-b7dbad67e838" >
+		<os:retrieve doc:name="Retrieve" doc:id="5c81509c-6482-47ef-9060-f441c903f01f" key="#[payload.id]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="e0920408-a6f3-438a-8a19-5014e05fca43" message="#[payload]"/>
+	</sub-flow>
+	<sub-flow name="OS-ReteriveAllKeys" doc:id="1a775936-be23-42d9-b5ad-53b0173f2480" >
+		<os:retrieve-all-keys doc:name="Retrieve all keys" doc:id="95382f3b-0bc1-448d-aab7-6a5b3a5d757a" />
+		<logger level="INFO" doc:name="Logger" doc:id="9b8ef7ec-578e-4ccc-b673-129a87597ffb" message="#[payload]"/>
+	</sub-flow>
+	<sub-flow name="OS-Contains" doc:id="73b30890-9f46-4de2-bdcd-b4764d0e66ef" >
+		<os:contains doc:name="Contains" doc:id="130f5ce8-9bc5-4024-aa37-db62d06f1f17" key="#[payload.id]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="8d23d2a7-1f6d-4d36-9443-b50b5be81fa6" message="#[payload]"/>
+	</sub-flow>
+	<sub-flow name="OS-Clear" doc:id="b7dc7b66-050f-4cac-824c-316531cd7584" >
+		<os:clear doc:name="Clear" doc:id="a8238cf9-217f-46be-a666-ba6debf185fd" />
+		<logger level="INFO" doc:name="Logger" doc:id="d07e3f15-bbe6-49a5-a5a9-dd4c0f3efa80" message="#[payload]"/>
+	</sub-flow>
+	<sub-flow name="OS-Remove" doc:id="caab860b-5b29-4d96-b4fe-44900478ec3c" >
+		<os:remove doc:name="Remove" doc:id="2af659aa-66a9-4d67-8e03-0756f8ae902e" key="#[payload.id]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="9c25a902-b3db-4cdf-a3fa-3d592219ac0f" message="#[payload]"/>
+	</sub-flow>
+</mule>

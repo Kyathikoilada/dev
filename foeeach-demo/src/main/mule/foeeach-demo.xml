@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw"
+      xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd 
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+
+    <http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" >
+        <http:listener-connection host="0.0.0.0" port="8081"/>
+    </http:listener-config>
+	<flow name="foeeach-demoFlow" doc:id="7e42bc33-852a-4a30-8425-a080411a6829" >
+		<file:listener doc:name="On New or Updated File" doc:id="43ceb665-5d74-4e03-82a8-fea09a7b5c74" directory="/Users/sudheerv/Downloads/filedemo/input" moveToDirectory="/Users/sudheerv/Downloads/filedemo/output">
+			<scheduling-strategy >
+				<fixed-frequency frequency="10" timeUnit="SECONDS" />
+			</scheduling-strategy>
+		</file:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="3ce1ae04-50e2-4ae0-89fc-5944bb42dcbd" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="3b7f022f-cbd7-4e11-84aa-605324e71179">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		<foreach doc:name="For Each" doc:id="c656b8bd-27ad-49c9-b461-4c70366bd889" >
+			<logger level="INFO" doc:name="Logger" doc:id="81d54180-5be3-4d0c-a9dc-eaa2027edc8a" message="#[payload]"/>
+		</foreach>
+	</flow>
+
+</mule>

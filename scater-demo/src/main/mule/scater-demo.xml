@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c0a7ff1c-ee09-4581-bf3e-368c990521dc" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="scater-demoFlow" doc:id="849632db-53c4-4a18-9f4c-9fa5143b7f75" >
+		<http:listener doc:name="Listener" doc:id="501c8027-9cb8-4d6d-8fec-bcf93e5e1506" config-ref="HTTP_Listener_config" path="/scattergather"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="443f0d35-7770-48ea-9d32-820e1a597195" >
+			<route >
+				<file:read doc:name="Read" doc:id="e9e54b07-268c-41c1-8711-782067494422" path="/Users/sudheerv/Downloads/demo"/>
+				<logger level="INFO" doc:name="Logger" doc:id="408dbbba-363e-4d7f-b39b-9d8975411015" message="#[payload]"/>
+			</route>
+			<route >
+				<file:read doc:name="Read" doc:id="49d0dd36-c705-4cfd-847c-bdae54cd3d19" path="/Users/sudheerv/Downloads/demo2"/>
+				<logger level="INFO" doc:name="Logger" doc:id="ba938bf8-58d8-4841-a516-f3dfd16d4958" message="#[payload]"/>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="21b379d6-d7f5-4e5e-ba4c-c15d3fae53cb" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+flatten(payload..payload)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

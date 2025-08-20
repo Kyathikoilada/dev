@@ -1,0 +1,94 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
+
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="576169cf-5bb1-4597-ae3a-607646857635" >
+
+		<http:listener-connection host="0.0.0.0" port="8081" />
+
+	</http:listener-config>
+
+	<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="02e32665-68e0-408e-b0ce-e27b9bb4a6b0" >
+
+		<wsc:connection wsdlLocation="https://www.crcind.com/csp/samples/SOAP.Demo.CLS?WSDL" service="SOAPDemo" port="SOAPDemoSoap" address="https://www.crcind.com:443/csp/samples/SOAP.Demo.cls" >
+
+			<wsc:web-service-security actor="http://schemas.xmlsoap.org/soap/actor/next" />
+
+		</wsc:connection>
+
+	</wsc:config>
+
+	<flow name="soap-webservices-taskFlow" doc:id="5331f713-9249-41e6-a96a-d21276168b38" >
+
+		<http:listener doc:name="Listener" doc:id="b4d5bfb6-014e-40d7-b78f-060be494092d" config-ref="HTTP_Listener_config" path="/soap"/>
+
+		<ee:transform doc:name="Transform Message" doc:id="fecc0e2f-5569-40cc-ab15-017bb1eec797" >
+
+			<ee:message >
+
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+output application/xml
+
+ns ns0 http://tempuri.org
+
+---
+
+{
+
+	ns0#AddInteger: {
+
+		ns0#Arg1: attributes.queryParams.num1,
+
+		ns0#Arg2: attributes.queryParams.num2
+
+	}
+
+}]]></ee:set-payload>
+
+			</ee:message>
+
+		</ee:transform>
+
+		<wsc:consume doc:name="Consume" doc:id="964ef1ee-5650-4ace-b7f1-94c805d48b86" config-ref="Web_Service_Consumer_Config" operation="AddInteger"/>
+
+		<ee:transform doc:name="Transform Message" doc:id="2e8e3beb-faac-4392-aec5-1eb419165c31" >
+
+			<ee:message >
+
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+ns ns0 http://tempuri.org
+
+
+
+output application/json
+
+---
+
+{
+
+	"result": payload.body.ns0#AddIntegerResponse.ns0#AddIntegerResult
+
+}]]></ee:set-payload>
+
+			</ee:message>
+
+		</ee:transform>
+
+	</flow>
+
+</mule>

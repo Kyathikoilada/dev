@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="834c84b7-0129-41c5-a620-1f601dd393fc" >
+		<http:listener-connection host="localhost" port="8087" />
+	</http:listener-config>
+	<flow name="error-oncontinueFlow" doc:id="5ce49a11-4c90-4241-acbd-1fe0be6359b4" >
+		<http:listener doc:name="Listener" doc:id="353d1f81-c1b1-4bb7-9dbf-46787becb246" config-ref="HTTP_Listener_config" path="/ErrorHandler"/>
+		<logger level="INFO" doc:name="Logger" doc:id="16a696bd-495e-4012-9181-5ec1f305d2c6" message="#[payload]"/>
+		<flow-ref doc:name="Flow Reference" doc:id="9ca3ac38-6fab-483b-aa94-6bc64cc9edb5" name="error-oncontinueFlow1"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a6a10644-33eb-409a-b139-7519a7f0cf0f" message="#[payload]"/>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="58df0e13-0bdc-4fad-9ac6-5916c629eadb" >
+				<logger level="INFO" doc:name="Logger" doc:id="d6d3dc39-ed06-4033-a3f1-7410ad9261b0" message="#[error.description]"/>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="error-oncontinueFlow1" doc:id="711a9d55-ca7d-485e-9a12-553525670695" >
+		<ee:transform doc:name="Transform Message" doc:id="5bfbb813-8622-46e6-8776-c7f26b04cbfe" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    "name" : payload.firstname +  "" ++ payload.lastname
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="4a20ee22-261b-4a47-bc08-c94c832a49f8" type="ANY">
+				<set-payload value='"ignore the error' doc:name="Set Payload" doc:id="e870a97b-aa33-438f-8d8a-3d0423d05287" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="386c06d7-335b-4c27-9284-70c712edd695" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="scattergatterFlow" doc:id="2fdd700c-da06-4952-aa36-24c50d886238" >
+		<http:listener doc:name="Listener" doc:id="13174c05-3965-45ab-a9a5-58b69f49a1f7" config-ref="HTTP_Listener_config" path="/scatter"/>
+		<logger level="INFO" doc:name="Logger" doc:id="727e895d-6368-459f-b7c6-77f2a452a321" message="before scatter gather"/>
+		<set-payload value="before scater gather" doc:name="Set Payload" doc:id="1b7b5f8b-e7b7-4c5f-bfb8-483eb2f54f96" />
+		<scatter-gather doc:name="Scatter-Gather" doc:id="783a6257-ae4c-48a7-baa4-3436ba0f9913" >
+			<route >
+				<logger level="INFO" doc:name="Logger" doc:id="0b489778-228e-4463-b867-adf8a3c5d222" message="logger1 in scatter"/>
+				<set-payload value="after scater gather 1" doc:name="Set Payload" doc:id="e43c6462-5077-481d-b32d-cc299ab0a5d3" />
+			</route>
+			<route >
+				<logger level="INFO" doc:name="Logger" doc:id="7ea4401c-651c-4361-b41c-6ae29bc1a460" message="logger2  in scatter gather"/>
+				<set-payload value="after scater gather 2" doc:name="Set Payload" doc:id="50f52c54-e282-41d0-9744-49c0d8b900bb" />
+			</route>
+		</scatter-gather>
+		<logger level="INFO" doc:name="Logger" doc:id="a6784ba8-8ffe-4f95-9ddb-e6463aa82f8c" message="log after scatter gathher"/>
+		<logger level="INFO" doc:name="Logger" doc:id="00822232-25f3-4ed4-90f1-36e1bf1996b2" message="#[payload]"/>
+	</flow>
+</mule>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="e351a1ed-432b-4475-b1d5-557b26ca41d5" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="paraalel-foreachFlow" doc:id="74e61205-dd17-4371-a811-cc819d912233" >
+		<http:listener doc:name="Listener" doc:id="3680aeff-0aa0-4896-8173-76b0c58dd256" config-ref="HTTP_Listener_config" path="/parallel"/>
+		<logger level="INFO" doc:name="Logger" doc:id="6083a1fe-9283-4774-bd3d-a360d12f8f8e" message="parallel flow started"/>
+		<ee:transform doc:name="Transform Message" doc:id="8ef5aca5-ac05-4441-98fc-7fc18d071864" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[
+	{
+		"region": "india",
+		"task"   : "get the total"
+	},
+	
+	{
+		"region": "usa",
+		"task"   : "get the total"
+	},
+	{
+		"region": "austraila",
+		"task"   : "get the total"
+	}
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<parallel-foreach doc:name="Parallel For Each" doc:id="1b776d72-b482-497e-8249-84009072f6c8" >
+			<logger level="INFO" doc:name="Logger" doc:id="80c26c14-4959-43ad-8f0e-f945dc495628" message="#[payload]"/>
+			<choice doc:name="Choice" doc:id="aafa8d0a-8824-4f2e-b737-e213377552f7" >
+				<when expression='#[payload.region == "india"]'>
+					<ee:transform doc:name="Transform Message" doc:id="1ede834c-6c80-4530-8ef6-f7c797f8486d" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"total sale of india" : "2000"
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</when>
+				<when expression='payload.region == "usa"'>
+					<ee:transform doc:name="Transform Message" doc:id="488e328c-ce88-4f36-b730-9f4430dabbfc" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"total sale of usa" : "3000"
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</when>
+				<otherwise>
+					<ee:transform doc:name="Transform Message" doc:id="9c817abc-cdb4-4be5-a7df-14f5d25f8e95" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"total sale of austraila" : "5000"
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</otherwise>
+			</choice>
+		</parallel-foreach>
+		<ee:transform doc:name="Transform Message" doc:id="e40ea108-6c7b-4995-a4db-930490a7dab4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="dfae1f56-7968-49e9-8398-5b7ef9bcb9a0" message="#[payload]"/>
+	</flow>
+</mule>

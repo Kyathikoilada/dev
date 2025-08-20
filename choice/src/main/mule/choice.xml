@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="dbe97a16-1c2a-4d6b-9e5e-85162f52912a" >
+
+		<http:listener-connection host="0.0.0.0" port="8081" />
+
+	</http:listener-config>
+
+	<flow name="choice-use-caseFlow" doc:id="83b4bb42-7459-410e-9e0d-b0ef79343363" >
+
+		<http:listener doc:name="Listener" doc:id="3abe3637-78d2-4096-921c-c71558c7962b" path="/choice" config-ref="HTTP_Listener_config"/>
+
+		<set-variable value="#[attributes.queryParams.country]" doc:name="Set Variable" doc:id="d4a4698b-9f73-4b83-bffd-277e320ee9fa" variableName="city"/>
+
+		<choice doc:name="Choice" doc:id="36ec3434-5637-4ee7-a4a3-94b12f154f32" >
+
+			<when expression="#[vars.city == 'india']">
+
+				<logger level="INFO" doc:name="Logger" doc:id="b6549cd6-70e1-4cfd-8101-d12c1389de1c" message="#[payload]"/>
+
+				<logger level="INFO" doc:name="Logger" doc:id="3b9f842a-c734-4cc1-8b62-b7467391c21d" />
+
+			</when>
+
+			<when expression="#[vars.city == 'us']">
+
+				<logger level="INFO" doc:name="Logger" doc:id="eefd450f-d895-4f4d-8343-045b3feb603a" />
+
+				<logger level="INFO" doc:name="Logger" doc:id="fc542704-8417-4f4f-ac11-ff7cb97c6c80" />
+
+			</when>
+
+			<when expression="#[vars.city == 'germany']">
+
+				<logger level="INFO" doc:name="Logger" doc:id="55bb610a-f436-4cea-a4da-43eead470cfa" />
+
+				<logger level="INFO" doc:name="Logger" doc:id="b5985879-dba5-49ac-96df-de25e3eb9c81" />
+
+			</when>
+
+			<otherwise >
+
+				<logger level="INFO" doc:name="Logger" doc:id="adf011f8-3b03-4c88-8201-72d3367d8eb8" message='"nothing"'/>
+
+			</otherwise>
+
+		</choice>
+
+	</flow>
+
+</mule>

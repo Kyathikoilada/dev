@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="39dea5b4-692f-45b3-8bec-9132df173863" >
+
+		<http:listener-connection host="localhost" port="8097" />
+
+	</http:listener-config>
+
+	<http:listener-config name="HTTP_Listener_config1" doc:name="HTTP Listener config" doc:id="75c9ae89-a3c5-4114-8cf7-9a41898c15e5" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="query-paramsFlow" doc:id="52b679c5-d15a-4a38-9453-92f927f747a7" >
+
+		<http:listener doc:name="Listener" doc:id="4fb16895-c32b-4160-9c74-6f8159132edc" path="/queryparam" config-ref="HTTP_Listener_config1"/>
+
+		<logger level="INFO" doc:name="Logger" doc:id="0a112f4a-3a96-4c32-98d6-550ce5e19168" message="#[attributes.queryParams.orderId]"/>
+
+	</flow>
+
+</mule>

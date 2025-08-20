@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="93a69932-7adc-412c-a088-428056c45036" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	
+	<flow name="until-sucessfulFlow" doc:id="7911c9c8-dc32-4a85-839b-745d3aec5907" >
+		<http:listener doc:name="Listener" doc:id="d44e5375-b6ef-4def-abb2-99cc19606f0d" config-ref="HTTP_Listener_config" path="/until"/>
+		<set-payload value='{"paymentDetails":{"cardNo":"1234","amount":500}}' mimeType="application/json" />
+		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="9cd31170-17ab-4e6e-92b6-fb9f5df2d436" >
+			<http:request method="POST" doc:name="Request" doc:id="90f7ef5e-a595-4bcf-9b2d-67bb163dd589" url="http://payment-gateway/api/until">
+				<http:body ><![CDATA[#[payload.paymentDetails]]]></http:body>
+			</http:request>
+		</until-successful>
+		<logger level="INFO" doc:name="Logger" doc:id="bfb01136-44f4-418e-9027-ddc7bf38c451" message="payment dpone"/>
+	</flow>
+	
+</mule>

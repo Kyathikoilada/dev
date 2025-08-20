@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="41c67b50-0100-4721-9719-9f83e9851174" />
+	<flow name="schedularFlow" doc:id="27b75f61-0077-4382-95be-1f10d2825e7d" >
+		<scheduler doc:name="Scheduler" doc:id="74e8ccc3-2c1f-402d-b9ac-581b53a947e2" >
+			<scheduling-strategy >
+				<fixed-frequency timeUnit="DAYS"/>
+			</scheduling-strategy>
+		</scheduler>
+		<file:write doc:name="Write" doc:id="612f88ac-11bd-4585-a860-3ea9c445b305" config-ref="File_Config" path="/Users/sudheerv/Downloads/demo3" mode="CREATE_NEW">
+			<file:content ><![CDATA[#["adding ther data using write"]]]></file:content>
+		</file:write>
+		<logger level="INFO" doc:name="Logger" doc:id="9cc75875-c058-4003-a8fa-d08d3bef6e49" message="hello  data adding"/>
+	</flow>
+</mule>

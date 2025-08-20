@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="corn-demoFlow" doc:id="d1293ca0-5a7f-427e-b76e-fce11907160e" >
+		<scheduler doc:name="Scheduler" doc:id="9d365161-3510-4831-a1ea-e4179e8502cd" >
+			<scheduling-strategy >
+				<cron expression="0 0/1 * 1/1 * ? *" />
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Logger" doc:id="5612f5fe-25c9-49af-9cf4-5423c733ab1c" message="using cron schedular"/>
+	</flow>
+</mule>

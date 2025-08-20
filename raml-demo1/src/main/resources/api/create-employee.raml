@@ -1,0 +1,246 @@
+#%RAML 1.0
+title: create employee
+baseUri: http://localhost:8091/emp-payment/create-employee
+/create-employee:
+  description: ctreating employee details
+  post:
+    body:
+      application/json:
+        type: object
+        properties:
+          employeeID:
+            required: true
+            type: integer
+            example: 88888
+          employeeName:
+            required: true
+            type: string
+            example: "JOHN"
+          employeeStatus:
+            required: true
+            type: string
+            example: "YES"
+        example:
+              {
+                   "employeeID": 88888,
+                   "employeeName": "JOHN",
+                  "employeeStatus": "YES"
+               }
+    responses:
+      200:
+        description: creating employee
+        body:
+          application/json:
+            type: object
+            properties:
+              status:
+                type: integer
+                required: true
+                example: 200
+              message:
+                type: string
+                required: true
+                example: "Success"
+            example:
+                {
+                      "status": 200,
+                      "message": “Success”
+                }
+      500:
+        description: creating employee
+        body:
+          application/json:
+            type: object
+            properties:
+              status:
+                type: integer
+                required: true
+                example: 500
+              message:
+                type: string
+                required: true
+                example: "internal server error"
+            example:
+                {
+                      "status": 500,
+
+                        "message": “internal server error”
+                }
+/update-employee:
+  put:
+    body:
+      application/xml:
+        type: object
+        xml:
+          name: employee
+        properties:
+           employeeID:
+            required: true
+            type: integer
+            example: 333
+           employeeStatus:
+             required: true
+             type: string
+             example: "A"
+        example:
+           <?xml version="1.0" encoding="UTF-8"?>
+          <employee>
+            <employeeID>333</employeeID>
+            <employeeStatus>A</employeeStatus>
+          </employee>
+    responses:
+      200:
+        body:
+          application/xml:
+            type: object
+            xml:
+              name: response
+            properties:
+              status:
+                type: integer
+                required: true
+                example: 200
+              message:
+                type: string
+                required: true
+                example: "success"
+            example:  
+                 <?xml version="1.0" encoding="UTF-8"?>
+                            <response>
+                              <status>200</status>
+                              <message>success</message>
+                             </response>
+      500:
+        body:
+          application/xml:
+            type: object
+            xml:
+              name: response
+            properties:
+              status:
+                type: integer
+                required: true
+                example: 500
+              message:
+                type: string
+                required: true
+                example: "Internal Server Error"
+            example:  
+                 <?xml version="1.0" encoding="UTF-8"?>
+                            <response>
+                              <status>500</status>
+                              <message>Internal Server Error</message>
+                             </response>
+/get-employee:
+  get:
+    queryParameters:
+      employeeID:
+        required: false
+        type: integer
+        example: 44445
+      employeeStatus:
+        required: false
+        example: "A"
+        type: string
+    responses:
+      200:
+        body:
+          application/json:
+            type: object
+            properties:
+             employeeID:
+                required: true
+                type: integer
+                example: 101
+             employeeName:
+                required: true
+                type: string
+                example: "john"
+             employeeStatus:
+                required: true
+                type: string
+                example: "A"
+            example:
+                            {
+                    "employeeID": 100,
+                    "employeeName": "DSU",
+                    "employeeStatus": "A"
+              }
+      500:
+        body:
+          application/json:
+            type: object
+            properties:
+               status:
+                type: integer
+                required: true
+                example: 500
+               message:
+                type: string
+                required: true
+                example: "Internal Server Error"
+            example:
+              {
+		              "status": 500,
+                  "message": “Internal Server Error”
+		          }
+/delete-employee/{employeeID}/{employeeName}:
+  delete:
+    responses:
+      200:
+        body:
+          application/json:
+            type: object
+            properties:
+              status:
+                type: integer
+                required: true
+                example: 200
+              message:
+                type: string
+                required: true
+                example: "Success"
+            example:
+              {
+		              "status": 200,
+                  "message": “Success”
+		          }
+      500:
+        body:
+          application/json:
+            type: object
+            properties:
+              status:
+                type: integer
+                required: true
+                example: 500
+              message:
+                type: string
+                required: true
+                example: "Internal Server Error"
+            example:
+              {
+		              "status": 500,
+                  "message": Internal Server Error
+		          }
+              
+              
+          
+
+          
+
+                  
+
+              
+              
+                
+                  
+                  
+    
+
+              
+        
+          
+          
+        
+    
